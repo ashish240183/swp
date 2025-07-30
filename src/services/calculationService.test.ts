@@ -29,49 +29,43 @@ describe('runSimulation', () => {
     };
     const { summary } = runSimulation(inputs, 0, 0);
     // 10L at 10% for 55 years should be ~26.4 Cr
-    if(summary){
-      expect(summary.finalCorpus).toBeGreaterThan(260000000);
-      expect(summary.finalCorpus).toBeLessThan(270000000);
-    }
+    expect(summary.finalCorpus).toBeGreaterThan(260000000);
+    expect(summary.finalCorpus).toBeLessThan(270000000);
   });
 
   it('should handle retirement and withdrawals correctly', () => {
     const inputs = { ...baseInputs, sipPaymentEndAge: 60, endAge: 61 };
     const { yearlyData, summary } = runSimulation(inputs, 50000, 100000);
     
-    if(yearlyData && summary){
-      const retirementYear = yearlyData.find(y => y.age === 60);
-      expect(retirementYear?.isRetired).toBe(true);
-      expect(retirementYear?.monthlyIncome).toBe(100000);
-      expect(retirementYear?.totalWithdrawalForYear).toBe(1200000);
+    const retirementYear = yearlyData.find(y => y.age === 60);
+    expect(retirementYear?.isRetired).toBe(true);
+    expect(retirementYear?.monthlyIncome).toBe(100000);
+    expect(retirementYear?.totalWithdrawalForYear).toBe(1200000);
 
-      const postRetirementYear = yearlyData.find(y => y.age === 61);
-      expect(postRetirementYear?.monthlyIncome).toBe(105000); // 5% increase
+    const postRetirementYear = yearlyData.find(y => y.age === 61);
+    expect(postRetirementYear?.monthlyIncome).toBe(105000); // 5% increase
 
-      expect(summary.totalWithdrawn).toBeGreaterThan(0);
-    }
+    expect(summary.totalWithdrawn).toBeGreaterThan(0);
   });
 
   it('should handle SIP correctly, including increase and freeze', () => {
     const inputs = { ...baseInputs, endAge: 52 };
     const { yearlyData, summary } = runSimulation(inputs, 50000, 0);
 
-    if(yearlyData && summary){
-      const firstYear = yearlyData.find(y => y.age === 30);
-      expect(firstYear?.sipAmount).toBe(50000);
-      expect(firstYear?.totalSipForYear).toBe(600000);
+    const firstYear = yearlyData.find(y => y.age === 30);
+    expect(firstYear?.sipAmount).toBe(50000);
+    expect(firstYear?.totalSipForYear).toBe(600000);
 
-      const secondYear = yearlyData.find(y => y.age === 31);
-      expect(secondYear?.sipAmount).toBe(52500); // 5% increase
-      
-      const frozenYear = yearlyData.find(y => y.age === 50);
-      expect(frozenYear?.isSipFrozen).toBe(true);
-      
-      const nextYear = yearlyData.find(y => y.age === 51);
-      expect(nextYear?.sipAmount).toBe(frozenYear?.sipAmount);
+    const secondYear = yearlyData.find(y => y.age === 31);
+    expect(secondYear?.sipAmount).toBe(52500); // 5% increase
+    
+    const frozenYear = yearlyData.find(y => y.age === 50);
+    expect(frozenYear?.isSipFrozen).toBe(true);
+    
+    const nextYear = yearlyData.find(y => y.age === 51);
+    expect(nextYear?.sipAmount).toBe(frozenYear?.sipAmount);
 
-      expect(summary.totalSipInvested).toBeGreaterThan(0);
-    }
+    expect(summary.totalSipInvested).toBeGreaterThan(0);
   });
   
   it('should stop simulation if corpus becomes negative during retirement', () => {
@@ -85,10 +79,8 @@ describe('runSimulation', () => {
         startingMonthlyIncome: 20000 
     };
     const { yearlyData } = runSimulation(inputs, 0, 20000);
-    if(yearlyData){
-      expect(yearlyData[yearlyData.length - 1].yearEndCorpus).toBeLessThanOrEqual(0);
-      expect(yearlyData.length).toBeLessThan(10); // Should not run for all 10 years
-    }
+    expect(yearlyData[yearlyData.length - 1].yearEndCorpus).toBeLessThanOrEqual(0);
+    expect(yearlyData.length).toBeLessThan(10); // Should not run for all 10 years
   });
 
   it('should return only final corpus when requested', () => {
@@ -101,11 +93,9 @@ describe('runSimulation', () => {
   it('should return a valid summary even with no results', () => {
     const inputs = { ...baseInputs, endAge: 29 }; // No years to simulate
     const { summary, yearlyData } = runSimulation(inputs, 50000, 100000);
-    if(yearlyData && summary){
-      expect(yearlyData.length).toBe(0);
-      expect(summary.totalSipInvested).toBe(0);
-      expect(summary.totalWithdrawn).toBe(0);
-      expect(summary.finalCorpus).toBe(inputs.addedCorpusNow);
-    }
+    expect(yearlyData.length).toBe(0);
+    expect(summary.totalSipInvested).toBe(0);
+    expect(summary.totalWithdrawn).toBe(0);
+    expect(summary.finalCorpus).toBe(inputs.addedCorpusNow);
   });
 }); 

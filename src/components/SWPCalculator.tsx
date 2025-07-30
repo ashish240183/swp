@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSWPCalculator } from '../hooks/useSWPCalculator';
 import { formatCurrency, convertToWords, formatNumberWithCommas } from '../utils/formatters';
 

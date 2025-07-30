@@ -1,3 +1,11 @@
+<<<<<<< HEAD
+node_modules
+=======
+# These are some examples of commonly ignored file patterns.
+# You should customize this list as applicable to your project.
+# Learn more about .gitignore:
+#     https://www.atlassian.com/git/tutorials/saving-changes/gitignore
+
 # Node artifact files
 node_modules/
 dist/
@@ -42,4 +50,5 @@ Thumbs.db
 *.flv
 *.mov
 *.wmv
-.vercel
+
+>>>>>>> 2a4570e8a7057956c642482b4be60337b1dcf8e6

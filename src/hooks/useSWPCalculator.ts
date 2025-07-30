@@ -32,7 +32,7 @@ export const useSWPCalculator = () => {
     sipFreezeAge: 65,
     expectedReturn: 10,
     calculationMode: 'calculateSIP',
-    startingSipAmount: 0,
+    startingSipAmount: 100000,
     startingMonthlyIncome: 800000,
     targetEndCorpus: 0,
   });
@@ -99,9 +99,9 @@ export const useSWPCalculator = () => {
         }
         
         setInputs((prev: Inputs) => ({ ...prev, startingSipAmount: Math.round(bestSip) }));
-        const result = runSimulation(inputs, bestSip, startingMonthlyIncome);
-        setResults(result.yearlyData);
-        setSummary(result.summary);
+        const { yearlyData, summary } = runSimulation(inputs, bestSip, startingMonthlyIncome);
+        setResults(yearlyData);
+        setSummary(summary);
         
       } else if (calculationMode === 'calculateIncome') {
         let low = 10000;
@@ -135,14 +135,14 @@ export const useSWPCalculator = () => {
         }
         
         setInputs((prev: Inputs) => ({ ...prev, startingMonthlyIncome: Math.round(bestIncome) }));
-        const result = runSimulation(inputs, startingSipAmount, bestIncome);
-        setResults(result.yearlyData);
-        setSummary(result.summary);
+        const { yearlyData, summary } = runSimulation(inputs, startingSipAmount, bestIncome);
+        setResults(yearlyData);
+        setSummary(summary);
         
       } else if (calculationMode === 'calculateEndCorpus') {
-        const result = runSimulation(inputs, startingSipAmount, startingMonthlyIncome);
-        setResults(result.yearlyData);
-        setSummary(result.summary);
+        const { yearlyData, summary } = runSimulation(inputs, startingSipAmount, startingMonthlyIncome);
+        setResults(yearlyData);
+        setSummary(summary);
       }
     } catch (error) {
       console.error('Error in calculateSWP:', error);
@@ -151,13 +151,13 @@ export const useSWPCalculator = () => {
 
   useEffect(() => {
     try {
-      const result = runSimulation(inputs, inputs.startingSipAmount, inputs.startingMonthlyIncome);
-      setResults(result.yearlyData);
-      setSummary(result.summary);
+      const { yearlyData, summary } = runSimulation(inputs, inputs.startingSipAmount, inputs.startingMonthlyIncome);
+      setResults(yearlyData);
+      setSummary(summary);
     } catch (error) {
       console.error('Error in useEffect:', error);
     }
-  }, []);
+  }, [inputs]);
 
   return {
     inputs,

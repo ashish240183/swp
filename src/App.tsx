@@ -1,4 +1,3 @@
-import React from 'react';
 import SWPCalculator from './components/SWPCalculator';
 
 function App() {

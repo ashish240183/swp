@@ -1,11 +1,17 @@
-import { YearlyData } from '../types';
+import { YearlyData, SummaryData } from '../types';
+
+export interface SimulationResults {
+  yearlyData: YearlyData[];
+  summary: SummaryData;
+  finalCorpus?: number;
+}
 
 export const runSimulation = (
   inputs: any, 
   sipAmount: number, 
   monthlyIncome: number, 
   returnFinalCorpusOnly = false
-) => {
+): SimulationResults => {
   try {
     const {
       currentAge,
@@ -90,7 +96,7 @@ export const runSimulation = (
     }
 
     if (returnFinalCorpusOnly) {
-      return { finalCorpus: corpus };
+      return { yearlyData: [], summary: { totalSipInvested: 0, totalWithdrawn: 0, finalCorpus: corpus }, finalCorpus: corpus };
     }
     
     const summary = {
@@ -102,6 +108,6 @@ export const runSimulation = (
     return { yearlyData, summary };
   } catch (error) {
     console.error('Error in runSimulation:', error);
-    throw new Error('Error in runSimulation');
+    return { yearlyData: [], summary: { totalSipInvested: 0, totalWithdrawn: 0, finalCorpus: 0 } };
   }
 }; 
