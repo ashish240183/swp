@@ -64,20 +64,20 @@ const SWPCalculator = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-8">
+      <div className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-6 sm:p-8">
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-4xl font-bold mb-2">SWP Calculator</h1>
-          <p className="text-indigo-100">A comprehensive tool to plan your systematic withdrawal strategy.</p>
+          <h1 className="text-3xl sm:text-4xl font-bold mb-2">SWP Calculator</h1>
+          <p className="text-indigo-100 text-sm sm:text-base">A comprehensive tool to plan your systematic withdrawal strategy.</p>
         </div>
       </div>
-      <div className="max-w-7xl mx-auto p-6">
+      <div className="max-w-7xl mx-auto p-4 sm:p-6">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
           <div className="lg:col-span-2">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="bg-white p-6 rounded-xl shadow-md">
                 <h2 className="text-xl font-semibold mb-4 text-gray-800">Basic Parameters</h2>
                 <div className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Your Current Age</label>
                       <input
@@ -99,7 +99,7 @@ const SWPCalculator = () => {
                       <p className="text-xs text-gray-500 mt-1">The age you plan to stop working.</p>
                     </div>
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Life Expectancy (SWP End Age)</label>
                       <input
@@ -159,7 +159,7 @@ const SWPCalculator = () => {
                     />
                     <p className="text-xs text-gray-500 mt-1">Any extra funds you'll add at retirement (e.g., PF). {convertToWords(inputs.addedCorpusRetirement)}</p>
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Annual SIP Increase (%)</label>
                       <input
@@ -395,21 +395,21 @@ const SWPCalculator = () => {
                 <thead className="bg-gray-100">
                   <tr>
                     <th className="px-6 py-3 text-left font-semibold text-gray-700">Age</th>
-                    <th className="px-6 py-3 text-left font-semibold text-gray-700">Phase</th>
+                    <th className="px-6 py-3 text-left font-semibold text-gray-700 hidden sm:table-cell">Phase</th>
                     <th className="px-6 py-3 text-right font-semibold text-gray-700">Year Start Corpus</th>
                     <th className="px-6 py-3 text-right font-semibold text-gray-700">Monthly SIP</th>
-                    <th className="px-6 py-3 text-right font-semibold text-gray-700">Annual SIP Total</th>
+                    <th className="px-6 py-3 text-right font-semibold text-gray-700 hidden sm:table-cell">Annual SIP Total</th>
                     <th className="px-6 py-3 text-right font-semibold text-gray-700">Monthly Income</th>
-                    <th className="px-6 py-3 text-right font-semibold text-gray-700">Annual Withdrawal</th>
-                    <th className="px-6 py-3 text-right font-semibold text-gray-700">Net Monthly Cash Flow</th>
-                    <th className="px-6 py-3 text-right font-semibold text-gray-700">Year End Corpus</th>
+                    <th className="px-6 py-3 text-right font-semibold text-gray-700 hidden sm:table-cell">Annual Withdrawal</th>
+                    <th className="px-6 py-3 text-right font-semibold text-gray-700 hidden sm:table-cell">Net Monthly Cash Flow</th>
+                    <th className="px-6 py-3 text-right font-semibold text-gray-700 hidden sm:table-cell">Year End Corpus</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
                   {results.map((row, index) => (
-                    <tr key={index} className={`hover:bg-gray-50 transition-colors duration-200 ${row.isRetired ? 'bg-red-50' : ''}`}>
+                    <tr key={index} className={`hover:bg-gray-50 transition-colors duration-200 ${row.isRetired ? 'bg-red-100' : ''}`}>
                       <td className="px-6 py-4 font-medium">{row.age}</td>
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-4 hidden sm:table-cell">
                         <div className="flex flex-col space-y-1">
                           <span className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${
                             row.isRetired 
@@ -431,15 +431,15 @@ const SWPCalculator = () => {
                       </td>
                       <td className="px-6 py-4 text-right">{formatCurrency(row.yearStartCorpus)}</td>
                       <td className="px-6 py-4 text-right">{row.sipAmount > 0 ? formatCurrency(row.sipAmount) : '-'}</td>
-                      <td className="px-6 py-4 text-right">{row.totalSipForYear > 0 ? formatCurrency(row.totalSipForYear) : '-'}</td>
+                      <td className="px-6 py-4 text-right hidden sm:table-cell">{row.totalSipForYear > 0 ? formatCurrency(row.totalSipForYear) : '-'}</td>
                       <td className="px-6 py-4 text-right">{row.monthlyIncome > 0 ? formatCurrency(row.monthlyIncome) : '-'}</td>
-                      <td className="px-6 py-4 text-right">{row.totalWithdrawalForYear > 0 ? formatCurrency(row.totalWithdrawalForYear) : '-'}</td>
-                      <td className="px-6 py-4 text-right">
+                      <td className="px-6 py-4 text-right hidden sm:table-cell">{row.totalWithdrawalForYear > 0 ? formatCurrency(row.totalWithdrawalForYear) : '-'}</td>
+                      <td className="px-6 py-4 text-right hidden sm:table-cell">
                         <span className={`font-semibold ${row.netCashFlow >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                           {formatCurrency(Math.abs(row.netCashFlow))}
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-right font-bold text-gray-800">{formatCurrency(row.yearEndCorpus)}</td>
+                      <td className="px-6 py-4 text-right font-bold text-gray-800 hidden sm:table-cell">{formatCurrency(row.yearEndCorpus)}</td>
                     </tr>
                   ))}
                 </tbody>
