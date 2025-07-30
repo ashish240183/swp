@@ -99,9 +99,9 @@ export const useSWPCalculator = () => {
         }
         
         setInputs((prev: Inputs) => ({ ...prev, startingSipAmount: Math.round(bestSip) }));
-        const { yearlyData, summary } = runSimulation(inputs, bestSip, startingMonthlyIncome);
-        setResults(yearlyData);
-        setSummary(summary);
+        const result = runSimulation(inputs, bestSip, startingMonthlyIncome);
+        setResults(result.yearlyData);
+        setSummary(result.summary);
         
       } else if (calculationMode === 'calculateIncome') {
         let low = 10000;
@@ -135,14 +135,14 @@ export const useSWPCalculator = () => {
         }
         
         setInputs((prev: Inputs) => ({ ...prev, startingMonthlyIncome: Math.round(bestIncome) }));
-        const { yearlyData, summary } = runSimulation(inputs, startingSipAmount, bestIncome);
-        setResults(yearlyData);
-        setSummary(summary);
+        const result = runSimulation(inputs, startingSipAmount, bestIncome);
+        setResults(result.yearlyData);
+        setSummary(result.summary);
         
       } else if (calculationMode === 'calculateEndCorpus') {
-        const { yearlyData, summary } = runSimulation(inputs, startingSipAmount, startingMonthlyIncome);
-        setResults(yearlyData);
-        setSummary(summary);
+        const result = runSimulation(inputs, startingSipAmount, startingMonthlyIncome);
+        setResults(result.yearlyData);
+        setSummary(result.summary);
       }
     } catch (error) {
       console.error('Error in calculateSWP:', error);
@@ -150,8 +150,13 @@ export const useSWPCalculator = () => {
   };
 
   useEffect(() => {
-    calculateSWP();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    try {
+      const result = runSimulation(inputs, inputs.startingSipAmount, inputs.startingMonthlyIncome);
+      setResults(result.yearlyData);
+      setSummary(result.summary);
+    } catch (error) {
+      console.error('Error in useEffect:', error);
+    }
   }, []);
 
   return {
