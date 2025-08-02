@@ -7,6 +7,7 @@ const SWPCalculator = () => {
     inputs,
     results,
     summary,
+    errors,
     handleInputChange,
     calculateSWP,
     setInputs
@@ -174,22 +175,28 @@ const SWPCalculator = () => {
                       <label className="block text-sm font-medium text-gray-700 mb-1">SIP End Age</label>
                       <input
                         type="text"
-                        value={formatInputValue(inputs.sipPaymentEndAge)}
+                        value={inputs.sipPaymentEndAge === 0 ? '' : formatInputValue(inputs.sipPaymentEndAge)}
                         onChange={(e) => handleInputChange('sipPaymentEndAge', e.target.value)}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                       />
                       <p className="text-xs text-gray-500 mt-1">The age you will stop making SIP contributions.</p>
+                      {errors.sipPaymentEndAge && (
+                        <p className="text-xs text-red-600 mt-1">{errors.sipPaymentEndAge}</p>
+                      )}
                     </div>
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">SIP Increase Freeze Age</label>
                     <input
                       type="text"
-                      value={formatInputValue(inputs.sipFreezeAge)}
+                      value={inputs.sipFreezeAge === 0 ? '' : formatInputValue(inputs.sipFreezeAge)}
                       onChange={(e) => handleInputChange('sipFreezeAge', e.target.value)}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                     />
                     <p className="text-xs text-gray-500 mt-1">The age your SIP amount stops increasing annually.</p>
+                    {errors.sipFreezeAge && (
+                      <p className="text-xs text-red-600 mt-1">{errors.sipFreezeAge}</p>
+                    )}
                   </div>
                 </div>
               </div>
@@ -319,8 +326,9 @@ const SWPCalculator = () => {
         {/* Calculate button spanning full width */}
         <div className="mb-8">
           <button
+            disabled={Object.values(errors).some(Boolean)}
             onClick={calculateSWP}
-            className="w-full lg:w-1/2 mx-auto block bg-gradient-to-r from-green-500 to-teal-600 text-white px-12 py-4 rounded-md hover:from-green-600 hover:to-teal-700 transition-all duration-300 transform hover:scale-105 font-medium text-lg"
+            className={`w-full lg:w-1/2 mx-auto block px-12 py-4 rounded-md font-medium text-lg transition-all duration-300 transform hover:scale-105 ${Object.values(errors).some(Boolean) ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-r from-green-500 to-teal-600 text-white hover:from-green-600 hover:to-teal-700'}`}
           >
             Calculate SWP
           </button>

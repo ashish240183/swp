@@ -19,6 +19,11 @@ interface Inputs {
   targetEndCorpus: number;
 }
 
+interface Errors {
+  sipPaymentEndAge?: string;
+  sipFreezeAge?: string;
+}
+
 export const useSWPCalculator = () => {
   const [inputs, setInputs] = useState<Inputs>({
     currentAge: 25,
@@ -44,10 +49,38 @@ export const useSWPCalculator = () => {
     finalCorpus: 0
   });
 
+  // Validation errors
+  const [errors, setErrors] = useState<Errors>({});
+
   const handleInputChange = (field: string, value: string | number) => {
+    // allow user to clear field while typing
+    if (value === '' || value === null) {
+      setInputs(prev => ({ ...prev, [field]: 0 }));
+      if (field === 'sipPaymentEndAge') setErrors(prev => ({ ...prev, sipPaymentEndAge: undefined }));
+      if (field === 'sipFreezeAge') setErrors(prev => ({ ...prev, sipFreezeAge: undefined }));
+      return;
+    }
     try {
       const cleanValue = typeof value === 'string' ? value.replace(/,/g, '') : value.toString();
       let numericValue = parseFloat(cleanValue) || 0;
+
+      // range validation for specific fields
+      if (field === 'sipPaymentEndAge') {
+        if (numericValue < inputs.currentAge || numericValue > inputs.endAge) {
+          setErrors(prev => ({ ...prev, sipPaymentEndAge: `SIP End Age must be between ${inputs.currentAge} and ${inputs.endAge}` }));
+        } else {
+          setErrors(prev => ({ ...prev, sipPaymentEndAge: undefined }));
+        }
+      }
+
+      if (field === 'sipFreezeAge') {
+        const upper = inputs.sipPaymentEndAge;
+        if (numericValue < inputs.currentAge || numericValue > upper) {
+          setErrors(prev => ({ ...prev, sipFreezeAge: `SIP Freeze Age must be between ${inputs.currentAge} and ${upper}` }));
+        } else {
+          setErrors(prev => ({ ...prev, sipFreezeAge: undefined }));
+        }
+      }
       
       if (cleanValue && cleanValue.length > 0 && !isNaN(numericValue)) {
         if (cleanValue.includes('.')) {
@@ -64,6 +97,7 @@ export const useSWPCalculator = () => {
   };
 
   const calculateSWP = () => {
+    if (Object.values(errors).some(Boolean)) return;
     try {
       const { calculationMode, targetEndCorpus, startingSipAmount, startingMonthlyIncome } = inputs;
       
@@ -163,6 +197,7 @@ export const useSWPCalculator = () => {
     inputs,
     results,
     summary,
+    errors,
     handleInputChange,
     calculateSWP,
     setInputs
