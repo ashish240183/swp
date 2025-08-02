@@ -140,25 +140,31 @@ const SWPCalculator = () => {
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Current Investment Value (₹)</label>
-                    <input
-                      type="text"
-                      value={formatInputValue(inputs.addedCorpusNow)}
-                      onChange={(e) => handleInputChange('addedCorpusNow', e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                      placeholder="5,00,00,000"
-                    />
-                    <p className="text-xs text-gray-500 mt-1">The total value of your current investments. {convertToWords(inputs.addedCorpusNow)}</p>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        value={formatInputValue(inputs.addedCorpusNow)}
+                        onChange={(e) => handleInputChange('addedCorpusNow', e.target.value)}
+                        className="w-full pr-28 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                        placeholder="5,00,00,000"
+                      />
+                      <span className="absolute bottom-0.5 right-3 text-xs text-gray-400 pointer-events-none">{convertToWords(inputs.addedCorpusNow)}</span>
+                    </div>
+                    <p className="text-xs text-gray-500 mt-1">The total value of your current investments.</p>
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Lumpsum at Retirement (₹)</label>
-                    <input
-                      type="text"
-                      value={formatInputValue(inputs.addedCorpusRetirement)}
-                      onChange={(e) => handleInputChange('addedCorpusRetirement', e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                      placeholder="5,00,00,000"
-                    />
-                    <p className="text-xs text-gray-500 mt-1">Any extra funds you'll add at retirement (e.g., PF). {convertToWords(inputs.addedCorpusRetirement)}</p>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        value={formatInputValue(inputs.addedCorpusRetirement)}
+                        onChange={(e) => handleInputChange('addedCorpusRetirement', e.target.value)}
+                        className="w-full pr-28 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                        placeholder="5,00,00,000"
+                      />
+                      <span className="absolute bottom-0.5 right-3 text-xs text-gray-400 pointer-events-none">{convertToWords(inputs.addedCorpusRetirement)}</span>
+                    </div>
+                    <p className="text-xs text-gray-500 mt-1">Any extra funds you'll add at retirement (e.g., PF).</p>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
@@ -232,35 +238,37 @@ const SWPCalculator = () => {
               <div className="mt-6 grid grid-cols-1 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Desired Monthly Income</label>
-                  <div className="flex items-center">
+                  <div className="flex items-center relative">
                     <span className="text-gray-500 mr-2">₹</span>
                     <input
                       type="text"
                       value={formatInputValue(inputs.startingMonthlyIncome)}
                       onChange={(e) => handleInputChange('startingMonthlyIncome', e.target.value)}
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="flex-1 pr-28 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       placeholder="5,00,000"
                     />
+                    <span className="absolute bottom-0.5 right-3 text-xs text-gray-400 pointer-events-none">{convertToWords(inputs.startingMonthlyIncome)}</span>
                   </div>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Target Corpus at End Age</label>
-                  <div className="flex items-center">
+                  <div className="flex items-center relative">
                     <span className="text-gray-500 mr-2">₹</span>
                     <input
                       type="text"
                       value={formatInputValue(inputs.targetEndCorpus)}
                       onChange={(e) => handleInputChange('targetEndCorpus', e.target.value)}
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="flex-1 pr-28 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       placeholder="0"
                     />
+                    <span className="absolute bottom-0.5 right-3 text-xs text-gray-400 pointer-events-none">{convertToWords(inputs.targetEndCorpus)}</span>
                   </div>
                 </div>
               </div>
             )}
             {inputs.calculationMode === 'calculateIncome' && (
               <div className="mt-6 grid grid-cols-1 gap-4">
-                <div>
+                <div className="relative">
                   <label className="block text-sm font-medium text-gray-700 mb-1">Your Monthly SIP</label>
                   <div className="flex items-center">
                     <span className="text-gray-500 mr-2">₹</span>
@@ -268,12 +276,13 @@ const SWPCalculator = () => {
                       type="text"
                       value={formatInputValue(inputs.startingSipAmount)}
                       onChange={(e) => handleInputChange('startingSipAmount', e.target.value)}
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="flex-1 pr-28 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       placeholder="1,00,000"
                     />
+                    <span className="absolute bottom-0.5 right-3 text-xs text-gray-400 pointer-events-none">{convertToWords(inputs.startingSipAmount)}</span>
                   </div>
                 </div>
-                <div>
+                <div className="relative">
                   <label className="block text-sm font-medium text-gray-700 mb-1">Target Corpus at End Age</label>
                   <div className="flex items-center">
                     <span className="text-gray-500 mr-2">₹</span>
@@ -281,16 +290,17 @@ const SWPCalculator = () => {
                       type="text"
                       value={formatInputValue(inputs.targetEndCorpus)}
                       onChange={(e) => handleInputChange('targetEndCorpus', e.target.value)}
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="flex-1 pr-28 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       placeholder="0"
                     />
+                    <span className="absolute bottom-0.5 right-3 text-xs text-gray-400 pointer-events-none">{convertToWords(inputs.targetEndCorpus)}</span>
                   </div>
                 </div>
               </div>
             )}
             {inputs.calculationMode === 'calculateEndCorpus' && (
               <div className="mt-6 grid grid-cols-1 gap-4">
-                <div>
+                <div className="relative">
                   <label className="block text-sm font-medium text-gray-700 mb-1">Your Monthly SIP</label>
                   <div className="flex items-center">
                     <span className="text-gray-500 mr-2">₹</span>
@@ -298,12 +308,13 @@ const SWPCalculator = () => {
                       type="text"
                       value={formatInputValue(inputs.startingSipAmount)}
                       onChange={(e) => handleInputChange('startingSipAmount', e.target.value)}
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="flex-1 pr-28 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       placeholder="1,00,000"
                     />
+                    <span className="absolute bottom-0.5 right-3 text-xs text-gray-400 pointer-events-none">{convertToWords(inputs.startingSipAmount)}</span>
                   </div>
                 </div>
-                <div>
+                <div className="relative">
                   <label className="block text-sm font-medium text-gray-700 mb-1">Desired Monthly Income</label>
                   <div className="flex items-center">
                     <span className="text-gray-500 mr-2">₹</span>
@@ -311,9 +322,10 @@ const SWPCalculator = () => {
                       type="text"
                       value={formatInputValue(inputs.startingMonthlyIncome)}
                       onChange={(e) => handleInputChange('startingMonthlyIncome', e.target.value)}
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="flex-1 pr-28 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       placeholder="5,00,000"
                     />
+                    <span className="absolute bottom-0.5 right-3 text-xs text-gray-400 pointer-events-none">{convertToWords(inputs.startingMonthlyIncome)}</span>
                   </div>
                 </div>
               </div>
@@ -348,7 +360,7 @@ const SWPCalculator = () => {
                       type="text"
                       value={formatInputValue(inputs.startingMonthlyIncome)}
                       onChange={(e) => handleInputChange('startingMonthlyIncome', e.target.value)}
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="flex-1 pr-28 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       placeholder="5,00,000"
                     />
                   </div>
@@ -362,7 +374,7 @@ const SWPCalculator = () => {
                       type="text"
                       value={formatInputValue(inputs.targetEndCorpus)}
                       onChange={(e) => handleInputChange('targetEndCorpus', e.target.value)}
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="flex-1 pr-28 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       placeholder="0"
                     />
                   </div>
@@ -391,7 +403,7 @@ const SWPCalculator = () => {
                       type="text"
                       value={formatInputValue(inputs.startingSipAmount)}
                       onChange={(e) => handleInputChange('startingSipAmount', e.target.value)}
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="flex-1 pr-28 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       placeholder="1,00,000"
                     />
                   </div>
@@ -405,7 +417,7 @@ const SWPCalculator = () => {
                       type="text"
                       value={formatInputValue(inputs.targetEndCorpus)}
                       onChange={(e) => handleInputChange('targetEndCorpus', e.target.value)}
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="flex-1 pr-28 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       placeholder="0"
                     />
                   </div>
@@ -434,7 +446,7 @@ const SWPCalculator = () => {
                       type="text"
                       value={formatInputValue(inputs.startingSipAmount)}
                       onChange={(e) => handleInputChange('startingSipAmount', e.target.value)}
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="flex-1 pr-28 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       placeholder="1,00,000"
                     />
                   </div>
@@ -448,7 +460,7 @@ const SWPCalculator = () => {
                       type="text"
                       value={formatInputValue(inputs.startingMonthlyIncome)}
                       onChange={(e) => handleInputChange('startingMonthlyIncome', e.target.value)}
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="flex-1 pr-28 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       placeholder="5,00,000"
                     />
                   </div>
