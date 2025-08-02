@@ -81,8 +81,8 @@ const SWPCalculator = () => {
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Your Current Age</label>
                       <input
-                        type="number"
-                        value={inputs.currentAge}
+                        type="text"
+                        value={formatInputValue(inputs.currentAge)}
                         onChange={(e) => handleInputChange('currentAge', e.target.value)}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
@@ -91,8 +91,8 @@ const SWPCalculator = () => {
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Planned Retirement Age</label>
                       <input
-                        type="number"
-                        value={inputs.retirementAge}
+                        type="text"
+                        value={formatInputValue(inputs.retirementAge)}
                         onChange={(e) => handleInputChange('retirementAge', e.target.value)}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
@@ -103,8 +103,8 @@ const SWPCalculator = () => {
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Life Expectancy (SWP End Age)</label>
                       <input
-                        type="number"
-                        value={inputs.endAge}
+                        type="text"
+                        value={formatInputValue(inputs.endAge)}
                         onChange={(e) => handleInputChange('endAge', e.target.value)}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
@@ -113,8 +113,8 @@ const SWPCalculator = () => {
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Expected Annual Return (%)</label>
                       <input
-                        type="number"
-                        value={inputs.expectedReturn}
+                        type="text"
+                        value={formatInputValue(inputs.expectedReturn)}
                         onChange={(e) => handleInputChange('expectedReturn', e.target.value)}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
@@ -124,8 +124,8 @@ const SWPCalculator = () => {
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Annual Income Increase (%)</label>
                     <input
-                      type="number"
-                      value={inputs.yearlyIncomeIncrease}
+                      type="text"
+                      value={formatInputValue(inputs.yearlyIncomeIncrease)}
                       onChange={(e) => handleInputChange('yearlyIncomeIncrease', e.target.value)}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
@@ -163,8 +163,8 @@ const SWPCalculator = () => {
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Annual SIP Increase (%)</label>
                       <input
-                        type="number"
-                        value={inputs.sipIncreaseRate}
+                        type="text"
+                        value={formatInputValue(inputs.sipIncreaseRate)}
                         onChange={(e) => handleInputChange('sipIncreaseRate', e.target.value)}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                       />
@@ -173,8 +173,8 @@ const SWPCalculator = () => {
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">SIP End Age</label>
                       <input
-                        type="number"
-                        value={inputs.sipPaymentEndAge}
+                        type="text"
+                        value={formatInputValue(inputs.sipPaymentEndAge)}
                         onChange={(e) => handleInputChange('sipPaymentEndAge', e.target.value)}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                       />
@@ -184,8 +184,8 @@ const SWPCalculator = () => {
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">SIP Increase Freeze Age</label>
                     <input
-                      type="number"
-                      value={inputs.sipFreezeAge}
+                      type="text"
+                      value={formatInputValue(inputs.sipFreezeAge)}
                       onChange={(e) => handleInputChange('sipFreezeAge', e.target.value)}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                     />
@@ -203,14 +203,14 @@ const SWPCalculator = () => {
                 className={`p-4 rounded-lg cursor-pointer transition-all duration-300 ${inputs.calculationMode === 'calculateSIP' ? 'bg-blue-100 border-2 border-blue-500' : 'bg-gray-100'}`}
                 onClick={() => setInputs(prev => ({ ...prev, calculationMode: 'calculateSIP' }))}
               >
-                <h3 className="font-semibold text-blue-800">Calculate Required SIP</h3>
+                <h3 className="font-semibold text-blue-800">Calculate Required Monthly SIP</h3>
                 <p className="text-sm text-gray-600">Find the SIP needed for your goals.</p>
               </div>
               <div 
                 className={`p-4 rounded-lg cursor-pointer transition-all duration-300 ${inputs.calculationMode === 'calculateIncome' ? 'bg-blue-100 border-2 border-blue-500' : 'bg-gray-100'}`}
                 onClick={() => setInputs(prev => ({ ...prev, calculationMode: 'calculateIncome' }))}
               >
-                <h3 className="font-semibold text-blue-800">Calculate Max Income</h3>
+                <h3 className="font-semibold text-blue-800">Calculate Max Monthly Income</h3>
                 <p className="text-sm text-gray-600">Find the max income you can get.</p>
               </div>
               <div 
@@ -220,24 +220,119 @@ const SWPCalculator = () => {
                 <h3 className="font-semibold text-blue-800">Calculate Final Corpus</h3>
                 <p className="text-sm text-gray-600">See the final corpus value.</p>
               </div>
+            {/* Mode specific inputs placed inside the Calculation Mode card */}
+            {inputs.calculationMode === 'calculateSIP' && (
+              <div className="mt-6 grid grid-cols-1 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Desired Monthly Income</label>
+                  <div className="flex items-center">
+                    <span className="text-gray-500 mr-2">₹</span>
+                    <input
+                      type="text"
+                      value={formatInputValue(inputs.startingMonthlyIncome)}
+                      onChange={(e) => handleInputChange('startingMonthlyIncome', e.target.value)}
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="5,00,000"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Target Corpus at End Age</label>
+                  <div className="flex items-center">
+                    <span className="text-gray-500 mr-2">₹</span>
+                    <input
+                      type="text"
+                      value={formatInputValue(inputs.targetEndCorpus)}
+                      onChange={(e) => handleInputChange('targetEndCorpus', e.target.value)}
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="0"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+            {inputs.calculationMode === 'calculateIncome' && (
+              <div className="mt-6 grid grid-cols-1 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Your Monthly SIP</label>
+                  <div className="flex items-center">
+                    <span className="text-gray-500 mr-2">₹</span>
+                    <input
+                      type="text"
+                      value={formatInputValue(inputs.startingSipAmount)}
+                      onChange={(e) => handleInputChange('startingSipAmount', e.target.value)}
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="1,00,000"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Target Corpus at End Age</label>
+                  <div className="flex items-center">
+                    <span className="text-gray-500 mr-2">₹</span>
+                    <input
+                      type="text"
+                      value={formatInputValue(inputs.targetEndCorpus)}
+                      onChange={(e) => handleInputChange('targetEndCorpus', e.target.value)}
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="0"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+            {inputs.calculationMode === 'calculateEndCorpus' && (
+              <div className="mt-6 grid grid-cols-1 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Your Monthly SIP</label>
+                  <div className="flex items-center">
+                    <span className="text-gray-500 mr-2">₹</span>
+                    <input
+                      type="text"
+                      value={formatInputValue(inputs.startingSipAmount)}
+                      onChange={(e) => handleInputChange('startingSipAmount', e.target.value)}
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="1,00,000"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Desired Monthly Income</label>
+                  <div className="flex items-center">
+                    <span className="text-gray-500 mr-2">₹</span>
+                    <input
+                      type="text"
+                      value={formatInputValue(inputs.startingMonthlyIncome)}
+                      onChange={(e) => handleInputChange('startingMonthlyIncome', e.target.value)}
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="5,00,000"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
             </div>
-            <div className="mt-6">
-              <button
-                onClick={calculateSWP}
-                className="w-full bg-gradient-to-r from-green-500 to-teal-600 text-white px-8 py-3 rounded-md hover:from-green-600 hover:to-teal-700 transition-all duration-300 transform hover:scale-105 font-medium text-lg"
-              >
-                Calculate SWP
-              </button>
-            </div>
+
           </div>
         </div>
-        
-        <div className="bg-white p-6 rounded-xl shadow-md mb-8">
+
+        {/* Calculate button spanning full width */}
+        <div className="mb-8">
+          <button
+            onClick={calculateSWP}
+            className="w-full lg:w-1/2 mx-auto block bg-gradient-to-r from-green-500 to-teal-600 text-white px-12 py-4 rounded-md hover:from-green-600 hover:to-teal-700 transition-all duration-300 transform hover:scale-105 font-medium text-lg"
+          >
+            Calculate SWP
+          </button>
+        </div>
+
+        <div className="bg-white p-6 rounded-xl shadow-md mb-8 hidden">
           {inputs.calculationMode === 'calculateSIP' && (
             <div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">Mode 1: Calculate Required SIP Amount</h3>
+              
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="p-4 bg-gray-50 rounded-lg">
+
+                <div className="p-4 bg-gray-50 rounded-lg hidden">
                   <label className="block text-sm font-medium text-gray-600 mb-2">Desired Monthly Income</label>
                   <div className="flex items-center">
                     <span className="text-gray-500 mr-2">₹</span>
@@ -251,7 +346,7 @@ const SWPCalculator = () => {
                   </div>
                   <p className="text-xs text-gray-500 mt-1">{convertToWords(inputs.startingMonthlyIncome)}</p>
                 </div>
-                <div className="p-4 bg-gray-50 rounded-lg">
+                <div className="p-4 bg-gray-50 rounded-lg hidden">
                   <label className="block text-sm font-medium text-gray-600 mb-2">Target Corpus at End Age</label>
                   <div className="flex items-center">
                     <span className="text-gray-500 mr-2">₹</span>
@@ -266,7 +361,7 @@ const SWPCalculator = () => {
                   <p className="text-xs text-gray-500 mt-1">{inputs.targetEndCorpus === 0 ? 'Zero balance at end' : `Leave ${convertToWords(inputs.targetEndCorpus)}`}</p>
                 </div>
                 <div className="p-4 bg-green-100 rounded-lg text-center">
-                  <label className="block text-sm font-medium text-green-800 mb-2">Required SIP</label>
+                  <label className="block text-sm font-medium text-green-800 mb-2">Required Monthly SIP</label>
                   <div className="text-2xl font-bold text-green-700">
                     {formatCurrency(inputs.startingSipAmount)}
                   </div>
@@ -278,9 +373,9 @@ const SWPCalculator = () => {
 
           {inputs.calculationMode === 'calculateIncome' && (
             <div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">Mode 2: Calculate Maximum Monthly Income</h3>
+              
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="p-4 bg-gray-50 rounded-lg">
+                <div className="p-4 bg-gray-50 rounded-lg hidden">
                   <label className="block text-sm font-medium text-gray-600 mb-2">Your Monthly SIP</label>
                   <div className="flex items-center">
                     <span className="text-gray-500 mr-2">₹</span>
@@ -294,7 +389,7 @@ const SWPCalculator = () => {
                   </div>
                   <p className="text-xs text-gray-500 mt-1">{convertToWords(inputs.startingSipAmount)}</p>
                 </div>
-                <div className="p-4 bg-gray-50 rounded-lg">
+                <div className="p-4 bg-gray-50 rounded-lg hidden">
                   <label className="block text-sm font-medium text-gray-600 mb-2">Target Corpus at End Age</label>
                   <div className="flex items-center">
                     <span className="text-gray-500 mr-2">₹</span>
@@ -321,9 +416,9 @@ const SWPCalculator = () => {
 
           {inputs.calculationMode === 'calculateEndCorpus' && (
             <div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">Mode 3: Calculate Final Corpus</h3>
+              
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="p-4 bg-gray-50 rounded-lg">
+                <div className="p-4 bg-gray-50 rounded-lg hidden">
                   <label className="block text-sm font-medium text-gray-600 mb-2">Your Monthly SIP</label>
                   <div className="flex items-center">
                     <span className="text-gray-500 mr-2">₹</span>
@@ -337,7 +432,7 @@ const SWPCalculator = () => {
                   </div>
                   <p className="text-xs text-gray-500 mt-1">{convertToWords(inputs.startingSipAmount)}</p>
                 </div>
-                <div className="p-4 bg-gray-50 rounded-lg">
+                <div className="p-4 bg-gray-50 rounded-lg hidden">
                   <label className="block text-sm font-medium text-gray-600 mb-2">Desired Monthly Income</label>
                   <div className="flex items-center">
                     <span className="text-gray-500 mr-2">₹</span>
@@ -368,7 +463,25 @@ const SWPCalculator = () => {
         {results.length > 0 && (
           <div className="bg-white p-6 rounded-xl shadow-md mb-8">
             <h2 className="text-2xl font-bold text-gray-800 mb-4">Summary</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-4 gap-6">
+              {inputs.calculationMode === 'calculateSIP' && (
+                <div className="bg-green-50 p-6 rounded-lg text-center">
+                  <h3 className="font-medium text-green-800">Required Monthly SIP</h3>
+                  <p className="text-3xl font-bold text-green-600 mt-2">{formatCurrency(inputs.startingSipAmount)}</p>
+                </div>
+              )}
+              {inputs.calculationMode === 'calculateIncome' && (
+                <div className="bg-green-50 p-6 rounded-lg text-center">
+                  <h3 className="font-medium text-green-800">Max Monthly Income</h3>
+                  <p className="text-3xl font-bold text-green-600 mt-2">{formatCurrency(inputs.startingMonthlyIncome)}</p>
+                </div>
+              )}
+              {inputs.calculationMode === 'calculateEndCorpus' && (
+                <div className="bg-green-50 p-6 rounded-lg text-center">
+                  <h3 className="font-medium text-green-800">Final Corpus</h3>
+                  <p className="text-3xl font-bold text-green-600 mt-2">{results.length > 0 ? formatCurrency(results[results.length - 1]?.yearEndCorpus || 0) : '---'}</p>
+                </div>
+              )}
               <div className="bg-blue-50 p-6 rounded-lg text-center">
                 <h3 className="font-medium text-blue-800">Total SIP Invested</h3>
                 <p className="text-3xl font-bold text-blue-600 mt-2">{formatCurrency(summary.totalSipInvested)}</p>
