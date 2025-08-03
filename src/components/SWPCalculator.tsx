@@ -8,6 +8,7 @@ const SWPCalculator = () => {
     results,
     summary,
     errors,
+    hasCalculated,
     handleInputChange,
     calculateSWP,
     setInputs
@@ -480,7 +481,7 @@ const SWPCalculator = () => {
           )}
         </div>
         
-        {results.length > 0 && (
+        {hasCalculated && results.length > 0 && (
           <div className="bg-white p-6 rounded-xl shadow-md mb-8">
             <h2 className="text-2xl font-bold text-gray-800 mb-4">Summary</h2>
             <div className="grid grid-cols-1 sm:grid-cols-4 gap-6">
@@ -520,59 +521,77 @@ const SWPCalculator = () => {
 
         {results.length > 0 && (
           <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-            <div className="px-6 py-4 bg-gray-800 text-white">
-              <h2 className="text-xl font-semibold">Year-by-Year Projection</h2>
+            <div className="px-4 py-3 bg-gray-800 text-white">
+              <h2 className="text-lg font-semibold">Year-by-Year Projection</h2>
+              <div className="flex flex-wrap gap-4 mt-2 text-xs">
+                <div className="flex items-center gap-1">
+                  <div className="w-3 h-3 bg-blue-400 rounded"></div>
+                  <span>Working Years</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <div className="w-3 h-3 bg-red-400 rounded"></div>
+                  <span>Retirement Years 🏖️</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <span className="text-orange-300">❄️ SIP Frozen</span>
+                </div>
+              </div>
             </div>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-gray-100">
+            <div className="overflow-x-auto max-h-96">
+              <table className="w-full text-sm">
+                <thead className="bg-gray-100 sticky top-0 z-10">
                   <tr>
-                    <th className="px-6 py-3 text-left font-semibold text-gray-700">Age</th>
-                    <th className="px-6 py-3 text-left font-semibold text-gray-700 hidden sm:table-cell">Phase</th>
-                    <th className="px-6 py-3 text-right font-semibold text-gray-700">Year Start Corpus</th>
-                    <th className="px-6 py-3 text-right font-semibold text-gray-700">Monthly SIP</th>
-                    <th className="px-6 py-3 text-right font-semibold text-gray-700 hidden sm:table-cell">Annual SIP Total</th>
-                    <th className="px-6 py-3 text-right font-semibold text-gray-700">Monthly Income</th>
-                    <th className="px-6 py-3 text-right font-semibold text-gray-700 hidden sm:table-cell">Annual Withdrawal</th>
-                    <th className="px-6 py-3 text-right font-semibold text-gray-700 hidden sm:table-cell">Net Monthly Cash Flow</th>
-                    <th className="px-6 py-3 text-right font-semibold text-gray-700 hidden sm:table-cell">Year End Corpus</th>
+                    <th className="px-3 py-2 text-left font-medium text-gray-700 border-b border-gray-300">Age</th>
+                    <th className="px-3 py-2 text-right font-medium text-gray-700 border-b border-gray-300">Start Corpus</th>
+                    <th className="px-3 py-2 text-right font-medium text-gray-700 border-b border-gray-300">Monthly SIP</th>
+                    <th className="px-3 py-2 text-right font-medium text-gray-700 border-b border-gray-300">Monthly Income</th>
+                    <th className="px-3 py-2 text-right font-medium text-gray-700 border-b border-gray-300 hidden lg:table-cell">Net Cash Flow</th>
+                    <th className="px-3 py-2 text-right font-medium text-gray-700 border-b border-gray-300">End Corpus</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200">
+                <tbody className="divide-y divide-gray-100">
                   {results.map((row, index) => (
-                    <tr key={index} className={`hover:bg-gray-50 transition-colors duration-200 ${row.isRetired ? 'bg-red-100' : ''}`}>
-                      <td className="px-6 py-4 font-medium">{row.age}</td>
-                      <td className="px-6 py-4 hidden sm:table-cell">
-                        <div className="flex flex-col space-y-1">
-                          <span className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${
-                            row.isRetired 
-                              ? 'bg-red-100 text-red-800' 
-                              : 'bg-blue-100 text-blue-800'
-                          }`}>
-                            {row.isRetired ? 'Retirement' : 'Accumulation'}
-                          </span>
-                          {row.isSipActive && (
-                            <span className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${
-                              row.isSipFrozen 
-                                ? 'bg-orange-100 text-orange-800' 
-                                : 'bg-green-100 text-green-800'
-                            }`}>
-                              {row.isSipFrozen ? 'SIP Frozen' : 'SIP Active'}
-                            </span>
-                          )}
+                    <tr key={index} className={`transition-colors duration-150 ${
+                      row.isRetired 
+                        ? 'bg-red-50 hover:bg-red-100 border-l-4 border-red-400' 
+                        : 'bg-blue-50 hover:bg-blue-100 border-l-4 border-blue-400'
+                    }`}>
+                      <td className={`px-3 py-2 font-medium whitespace-nowrap ${
+                        row.isRetired ? 'text-red-800' : 'text-blue-800'
+                      }`}>
+                        <div className="flex items-center gap-1">
+                          <span>{row.age}</span>
+                          {row.isRetired && <span className="text-xs">🏖️</span>}
                         </div>
                       </td>
-                      <td className="px-6 py-4 text-right">{formatCurrency(row.yearStartCorpus)}</td>
-                      <td className="px-6 py-4 text-right">{row.sipAmount > 0 ? formatCurrency(row.sipAmount) : '-'}</td>
-                      <td className="px-6 py-4 text-right hidden sm:table-cell">{row.totalSipForYear > 0 ? formatCurrency(row.totalSipForYear) : '-'}</td>
-                      <td className="px-6 py-4 text-right">{row.monthlyIncome > 0 ? formatCurrency(row.monthlyIncome) : '-'}</td>
-                      <td className="px-6 py-4 text-right hidden sm:table-cell">{row.totalWithdrawalForYear > 0 ? formatCurrency(row.totalWithdrawalForYear) : '-'}</td>
-                      <td className="px-6 py-4 text-right hidden sm:table-cell">
-                        <span className={`font-semibold ${row.netCashFlow >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                          {formatCurrency(Math.abs(row.netCashFlow))}
+                      <td className="px-3 py-2 text-right text-gray-700">{formatCurrency(row.yearStartCorpus)}</td>
+                      <td className="px-3 py-2 text-right">
+                        {row.sipAmount > 0 ? (
+                          <span className={`font-medium ${
+                            row.isSipFrozen ? 'text-orange-600' : 'text-green-600'
+                          }`}>
+                            {formatCurrency(row.sipAmount)}
+                            {row.isSipFrozen && <span className="ml-1 text-xs">❄️</span>}
+                          </span>
+                        ) : (
+                          <span className="text-gray-400">-</span>
+                        )}
+                      </td>
+                      <td className="px-3 py-2 text-right">
+                        {row.monthlyIncome > 0 ? (
+                          <span className="text-blue-600 font-medium">{formatCurrency(row.monthlyIncome)}</span>
+                        ) : (
+                          <span className="text-gray-400">-</span>
+                        )}
+                      </td>
+                      <td className="px-3 py-2 text-right hidden lg:table-cell">
+                        <span className={`font-medium ${
+                          row.netCashFlow < 0 ? 'text-green-600' : 'text-red-600'
+                        }`}>
+                          {row.netCashFlow >= 0 ? '+' : ''}{formatCurrency(row.netCashFlow)}
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-right font-bold text-gray-800 hidden sm:table-cell">{formatCurrency(row.yearEndCorpus)}</td>
+                      <td className="px-3 py-2 text-right font-semibold text-gray-900">{formatCurrency(row.yearEndCorpus)}</td>
                     </tr>
                   ))}
                 </tbody>

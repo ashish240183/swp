@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { YearlyData, SummaryData } from '../types';
 import { runSimulation } from '../services/calculationService';
 
@@ -51,6 +51,7 @@ export const useSWPCalculator = () => {
 
   // Validation errors
   const [errors, setErrors] = useState<Errors>({});
+  const [hasCalculated, setHasCalculated] = useState(false);
 
   const handleInputChange = (field: string, value: string | number) => {
     // allow user to clear field while typing
@@ -98,6 +99,7 @@ export const useSWPCalculator = () => {
 
   const calculateSWP = () => {
     if (Object.values(errors).some(Boolean)) return;
+    setHasCalculated(true);
     try {
       const { calculationMode, targetEndCorpus, startingSipAmount, startingMonthlyIncome } = inputs;
       
@@ -183,21 +185,14 @@ export const useSWPCalculator = () => {
     }
   };
 
-  useEffect(() => {
-    try {
-      const { yearlyData, summary } = runSimulation(inputs, inputs.startingSipAmount, inputs.startingMonthlyIncome);
-      setResults(yearlyData);
-      setSummary(summary);
-    } catch (error) {
-      console.error('Error in useEffect:', error);
-    }
-  }, [inputs]);
+  // Removed automatic calculation on input change - only calculate when user clicks button
 
   return {
     inputs,
     results,
     summary,
     errors,
+    hasCalculated,
     handleInputChange,
     calculateSWP,
     setInputs
