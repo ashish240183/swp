@@ -1,7 +1,6 @@
 // PDF Export utility for SWP Calculator
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-import { formatCurrency, convertToWords } from './formatters';
 
 // Custom formatter for PDF to avoid formatting issues
 const formatCurrencyForPDF = (amount: number): string => {
@@ -112,7 +111,6 @@ export const exportToPDF = async (
 
     // Create table for input parameters
     let x = 20;
-    let maxHeight = 0;
     for (let i = 0; i < inputData.length; i++) {
       const [label, value] = inputData[i];
       
