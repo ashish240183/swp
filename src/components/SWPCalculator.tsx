@@ -1,6 +1,7 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSWPCalculator } from '../hooks/useSWPCalculator';
 import { formatCurrency, convertToWords, formatNumberWithCommas } from '../utils/formatters';
+import { exportToPDF } from '../utils/pdfExport';
 
 const SWPCalculator = () => {
   const {
@@ -13,6 +14,25 @@ const SWPCalculator = () => {
     calculateSWP,
     setInputs
   } = useSWPCalculator();
+
+  const [isPdfExporting, setIsPdfExporting] = useState(false);
+
+  const handlePdfExport = async () => {
+    if (!hasCalculated) {
+      alert('Please calculate the SWP first before exporting to PDF.');
+      return;
+    }
+
+    setIsPdfExporting(true);
+    try {
+      await exportToPDF(inputs, summary, hasCalculated);
+    } catch (error) {
+      console.error('PDF export error:', error);
+      alert('Failed to export PDF. Please try again.');
+    } finally {
+      setIsPdfExporting(false);
+    }
+  };
 
   useEffect(() => {
     const style = document.createElement('style');
@@ -336,15 +356,42 @@ const SWPCalculator = () => {
           </div>
         </div>
 
-        {/* Calculate button spanning full width */}
+        {/* Calculate and Export buttons */}
         <div className="mb-8">
-          <button
-            disabled={Object.values(errors).some(Boolean)}
-            onClick={calculateSWP}
-            className={`w-full lg:w-1/2 mx-auto block px-12 py-4 rounded-md font-medium text-lg transition-all duration-300 transform hover:scale-105 ${Object.values(errors).some(Boolean) ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-r from-green-500 to-teal-600 text-white hover:from-green-600 hover:to-teal-700'}`}
-          >
-            Calculate SWP
-          </button>
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+            <button
+              disabled={Object.values(errors).some(Boolean)}
+              onClick={calculateSWP}
+              className={`w-full sm:w-auto px-12 py-4 rounded-md font-medium text-lg transition-all duration-300 transform hover:scale-105 ${Object.values(errors).some(Boolean) ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-r from-green-500 to-teal-600 text-white hover:from-green-600 hover:to-teal-700'}`}
+            >
+              Calculate SWP
+            </button>
+            
+            {hasCalculated && results.length > 0 && (
+              <button
+                disabled={isPdfExporting}
+                onClick={handlePdfExport}
+                className={`w-full sm:w-auto px-8 py-4 rounded-md font-medium text-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2 ${isPdfExporting ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white hover:from-blue-600 hover:to-indigo-700'}`}
+              >
+                {isPdfExporting ? (
+                  <>
+                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Generating PDF...
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd"></path>
+                    </svg>
+                    Export to PDF
+                  </>
+                )}
+              </button>
+            )}
+          </div>
         </div>
 
         <div className="bg-white p-6 rounded-xl shadow-md mb-8 hidden">

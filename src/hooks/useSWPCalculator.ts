@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { YearlyData, SummaryData } from '../types';
 import { runSimulation } from '../services/calculationService';
+import { saveInputsToStorage, loadInputsFromStorage } from '../utils/localStorage';
 
 interface Inputs {
   currentAge: number;
@@ -25,7 +26,7 @@ interface Errors {
 }
 
 export const useSWPCalculator = () => {
-  const [inputs, setInputs] = useState<Inputs>({
+  const defaultInputs: Inputs = {
     currentAge: 25,
     retirementAge: 50,
     endAge: 85,
@@ -40,7 +41,9 @@ export const useSWPCalculator = () => {
     startingSipAmount: 100000,
     startingMonthlyIncome: 800000,
     targetEndCorpus: 0,
-  });
+  };
+
+  const [inputs, setInputs] = useState<Inputs>(defaultInputs);
 
   const [results, setResults] = useState<YearlyData[]>([]);
   const [summary, setSummary] = useState<SummaryData>({
@@ -184,6 +187,22 @@ export const useSWPCalculator = () => {
       console.error('Error in calculateSWP:', error);
     }
   };
+
+  // Load saved inputs from localStorage on component mount
+  useEffect(() => {
+    const savedInputs = loadInputsFromStorage(defaultInputs);
+    setInputs(savedInputs);
+  }, []);
+
+  // Save inputs to localStorage whenever inputs change (skip initial save)
+  useEffect(() => {
+    // Skip saving on initial mount to prevent overwriting loaded data
+    const timeoutId = setTimeout(() => {
+      saveInputsToStorage(inputs);
+    }, 100);
+
+    return () => clearTimeout(timeoutId);
+  }, [inputs]);
 
   // Removed automatic calculation on input change - only calculate when user clicks button
 
