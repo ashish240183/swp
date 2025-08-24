@@ -10,6 +10,9 @@ lerna-debug.log*
 # Dependencies
 node_modules/
 
+# Lock files - we use yarn.lock, not package-lock.json
+package-lock.json
+
 # Build output
 dist/
 dist-ssr/
